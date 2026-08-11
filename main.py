@@ -3,6 +3,7 @@ from book import Book
 from helpMethods import getNumberInRange
 from person import Person
 from libraryExceptions import BookNotFound
+from bookCategory import getCategoryInput
 
 print("Welcome to my library")
 
@@ -31,10 +32,8 @@ if userChoice == 1:
 
         bookTitle = input("Book Title: ")
         bookAuthor = input("Author: ")
-        bookCategory = input("Category: ")
-
-        newBook = Book(bookTitle, bookAuthor, bookCategory)
-        myLibrary.addBook(newBook)
+        bookCategory = getCategoryInput("Category: ")
+        myLibrary.addBook(bookTitle, bookAuthor, bookCategory)
         print("The book was added successfully.")
         
     else:
@@ -42,8 +41,8 @@ if userChoice == 1:
         bookTitle = input("Book Title: ")
         try:
             myLibrary.removeBook(bookTitle)
-        except BookNotFound as e:
-            print(e)
+        except BookNotFound:
+            print("This book doesn't exist.")
 
 else:
 
@@ -59,18 +58,14 @@ else:
 
     if customerChoice == 1:
 
-        userName = input("Your name: ")
-        userNationalID = input("Your national ID: ")
-        userPhoneNumber = input("Your phone number: ")
         bookTitle = input("Book Title: ")
 
-        customer = Person(userName, userNationalID, userPhoneNumber)
         try:
-            orderedBook = myLibrary.borrowBook(customer, bookTitle)
-        except BookNotFound as e:
-            print(e)
-        else:
+            orderedBook = myLibrary.borrowBook(bookTitle)
+        except BookNotFound:
             print(f"We don't have '{bookTitle}' book.")
+        else:
+            print("Successful borrowing operation.")
 
     else:
         bookTitle = input("Book Title: ")

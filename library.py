@@ -1,6 +1,7 @@
 from booksRepository import BooksRepository
 from book import Book
 from libraryExceptions import BookNotFound
+from bookCategory import BookCategory
 
 class Library:
 
@@ -9,12 +10,13 @@ class Library:
         self.availableBooks = BooksRepository("availableBooks.json")
         self.borrowedBooks = BooksRepository("borrowedBooks.json")
 
-    def borrowBook(self, person, bookTitle) -> Book:
+    def borrowBook(self, bookTitle) -> Book:
 
         if not self.isBookAvailable(bookTitle):
             raise BookNotFound(f"'{bookTitle}' is not available in the library.")
 
         book = self.availableBooks.removeBook(bookTitle)
+        self.borrowedBooks.addBook(book)
         return book
 
     def returnBook(self, bookTitle):
@@ -23,11 +25,12 @@ class Library:
             book = self.borrowedBooks.removeBook(bookTitle)
             self.availableBooks.addBook(book)
 
-    def addBook(self, book):
+    def addBook(self, bookTitle, bookAuthor, bookCategory):
 
-        if type(book) != Book:
-            raise ValueError("Wrong data type for the book.")
+        if not BookCategory.isCategoryName(bookCategory):
+            raise ValueError("Invalid Book Category.")
 
+        book = Book(bookTitle, bookAuthor, bookCategory)
         self.availableBooks.addBook(book)
 
     def removeBook(self, bookTitle):

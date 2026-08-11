@@ -10,9 +10,39 @@ class BookCategory(Enum):
         return f"{self.name}"
 
     @staticmethod
-    def getCategory(categoryName):
+    def getCategory(categoryName: str):
         for category in BookCategory:
-            if category.name == categoryName:
+            if category.name.casefold() == categoryName.casefold():
                 return category
 
         raise ValueError("Failed to convert to a BookCategory object")
+
+    @staticmethod
+    def isCategoryName(name: str):
+        for category in BookCategory:
+            if category.name.casefold() == name.casefold():
+                return True
+
+        return False
+
+    @staticmethod
+    def printCategories():
+        print("Book Categories: [ ", end="")
+        for category in BookCategory:
+            print(category, end=" ")
+        print("]")
+######################################################################################
+
+def getCategoryInput(prompt = "Enter a book category: ") -> BookCategory:
+    category = None
+    while True:
+        try:
+            BookCategory.printCategories()
+            userInput = input(prompt)
+            category = BookCategory.getCategory(userInput)
+        except ValueError:
+            print("Invalid Category Name")
+        else:
+            break
+
+    return category
