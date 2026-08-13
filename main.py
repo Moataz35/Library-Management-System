@@ -1,30 +1,33 @@
 from library import Library
-from book import Book
-from helpMethods import getNumberInRange
-from person import Person
 from libraryExceptions import BookNotFound
+from helpMethods import *
 from bookCategory import getCategoryInput
 
 print("Welcome to my library")
-
-print("Are you...?")
-print("1. Admin")
-print("2. Customer")
+print("1. Login")
+print("2. Sign up")
 
 userChoice = getNumberInRange(1, 2)
 
 myLibrary = Library()
+username = None
+
+if userChoice == 1:
+    username = getUsernameFromLoginScreen(myLibrary)
+else:
+    username = getUsernameFromSignUpScreen(myLibrary)
+
+userIsAdmin = myLibrary.accountManager.isAdmin(username)
 
 print("What do you want to do?")
-if userChoice == 1:
+if userIsAdmin:
 
     adminMenu = [
         "Add a book",
         "Remove a book"
     ]
 
-    for i in range(len(adminMenu)):
-        print(f"{i + 1}. {adminMenu[i]}")
+    printAsMenu(adminMenu)
 
     adminChoice = getNumberInRange(1, len(adminMenu))
 
@@ -33,14 +36,15 @@ if userChoice == 1:
         bookTitle = input("Book Title: ")
         bookAuthor = input("Author: ")
         bookCategory = getCategoryInput("Category: ")
-        myLibrary.addBook(bookTitle, bookAuthor, bookCategory)
+
+        myLibrary.addBook(username, bookTitle, bookAuthor, bookCategory)
         print("The book was added successfully.")
         
     else:
 
         bookTitle = input("Book Title: ")
         try:
-            myLibrary.removeBook(bookTitle)
+            myLibrary.removeBook(username, bookTitle)
         except BookNotFound:
             print("This book doesn't exist.")
 
@@ -51,8 +55,7 @@ else:
         "Return a book"
     ]
 
-    for i in range(len(customerMenu)):
-        print(f"{i + 1}. {customerMenu[i]}")
+    printAsMenu(customerMenu)
 
     customerChoice = getNumberInRange(1, len(customerMenu))
 
@@ -61,16 +64,16 @@ else:
         bookTitle = input("Book Title: ")
 
         try:
-            orderedBook = myLibrary.borrowBook(bookTitle)
-        except BookNotFound:
-            print(f"We don't have '{bookTitle}' book.")
+            orderedBook = myLibrary.borrowBook(username, bookTitle)
+        except BookNotFound as errorMessage:
+            print(errorMessage)
         else:
             print("Successful borrowing operation.")
 
     else:
         bookTitle = input("Book Title: ")
-        myLibrary.returnBook(bookTitle)
+        myLibrary.returnBook(username, bookTitle)
         print("Thank you for returning the book on time")
 
-
-myLibrary.updateRepository()
+myLibrary.accountManager.logOut(username)
+myLibrary.updateStoredData()

@@ -26,11 +26,16 @@ class BooksRepository:
     
     def removeBook(self, bookTitle):
 
-        for book in self.booksList:
-            if book.title == bookTitle:
-                return book
+        bookIndex = -1
+        for i in range(len(self.booksList)):
+            if self.booksList[i].title == bookTitle:
+                bookIndex = i
 
-        raise BookNotFound(f"'{bookTitle}' is not available in the repository.")
+        if bookIndex == -1:
+            raise BookNotFound(f"'{bookTitle}' is not available in the repository.")
+
+        book = self.booksList.pop(bookIndex)
+        return book
 
     def isInRepository(self, bookTitle):
 
