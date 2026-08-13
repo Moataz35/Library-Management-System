@@ -35,6 +35,8 @@ class Library:
         if self.isBookBorrowed(bookTitle):
             book = self.borrowedBooks.removeBook(bookTitle)
             self.availableBooks.addBook(book)
+        else:
+            raise BookNotFound("This book is not borrowed")
 
     def addBook(self, username, bookTitle, bookAuthor, bookCategory):
 

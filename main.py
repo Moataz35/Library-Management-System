@@ -1,7 +1,6 @@
 from library import Library
 from libraryExceptions import BookNotFound
 from helpMethods import *
-from bookCategory import getCategoryInput
 
 print("Welcome to my library")
 print("1. Login")
@@ -33,8 +32,8 @@ if userIsAdmin:
 
     if adminChoice == 1:
 
-        bookTitle = input("Book Title: ")
-        bookAuthor = input("Author: ")
+        bookTitle = getNonEmptyInput("Book Title: ")
+        bookAuthor = getNonEmptyInput("Author: ")
         bookCategory = getCategoryInput("Category: ")
 
         myLibrary.addBook(username, bookTitle, bookAuthor, bookCategory)
@@ -42,7 +41,7 @@ if userIsAdmin:
         
     else:
 
-        bookTitle = input("Book Title: ")
+        bookTitle = getNonEmptyInput("Book Title: ")
         try:
             myLibrary.removeBook(username, bookTitle)
         except BookNotFound:
@@ -61,7 +60,7 @@ else:
 
     if customerChoice == 1:
 
-        bookTitle = input("Book Title: ")
+        bookTitle = getNonEmptyInput("Book Title: ")
 
         try:
             orderedBook = myLibrary.borrowBook(username, bookTitle)
@@ -71,9 +70,16 @@ else:
             print("Successful borrowing operation.")
 
     else:
-        bookTitle = input("Book Title: ")
-        myLibrary.returnBook(username, bookTitle)
-        print("Thank you for returning the book on time")
+
+        bookTitle = getNonEmptyInput("Book Title: ")
+
+        try:
+            myLibrary.returnBook(username, bookTitle)
+        except BookNotFound:
+            print("You didn't borrow this book from us.")
+        else:
+            print("Thank you for returning the book on time")
+            
 
 myLibrary.accountManager.logOut(username)
 myLibrary.updateStoredData()

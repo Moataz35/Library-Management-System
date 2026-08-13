@@ -31,18 +31,3 @@ class BookCategory(Enum):
         for category in BookCategory:
             print(category, end=" ")
         print("]")
-######################################################################################
-
-def getCategoryInput(prompt = "Enter a book category: ") -> BookCategory:
-    category = None
-    while True:
-        try:
-            BookCategory.printCategories()
-            userInput = input(prompt)
-            category = BookCategory.getCategory(userInput)
-        except ValueError:
-            print("Invalid Category Name")
-        else:
-            break
-
-    return category

@@ -1,4 +1,5 @@
 from library import Library
+from bookCategory import BookCategory
 from accountManager import UserNotFound, DuplicateUsername, IncorrectPassword
 
 def getNumber(prompt = "", numberType = float):
@@ -29,8 +30,8 @@ def printAsMenu(anyList: list):
 
 def getUsernameFromLoginScreen(libraryObject: Library):
 
-    username = input("Username: ")
-    password = input("Password: ")
+    username = getNonEmptyInput("Username: ")
+    password = getNonEmptyInput("Password: ")
 
     successful_login = False
     while not successful_login:
@@ -39,11 +40,11 @@ def getUsernameFromLoginScreen(libraryObject: Library):
 
         except UserNotFound:
             print("Invalid Username")
-            username = input("Username: ")
+            username = getNonEmptyInput("Username: ")
 
         except IncorrectPassword:
             print("Incorrect Password")
-            password = input("Password: ")
+            password = getNonEmptyInput("Password: ")
 
         else:
             successful_login = True
@@ -52,11 +53,11 @@ def getUsernameFromLoginScreen(libraryObject: Library):
 
 def getUsernameFromSignUpScreen(libraryObject: Library):
 
-    firstName = input("First Name: ")
-    lastName = input("Last Name: ")
-    nationalID = input("National ID: ")
-    username = input("Username: ")
-    password = input("Password: ")
+    firstName = getNonEmptyInput("First Name: ")
+    lastName = getNonEmptyInput("Last Name: ")
+    nationalID = getNonEmptyInput("National ID: ")
+    username = getNonEmptyInput("Username: ")
+    password = getNonEmptyInput("Password: ")
 
     successful_signUp = False
     while not successful_signUp:
@@ -66,9 +67,33 @@ def getUsernameFromSignUpScreen(libraryObject: Library):
         except DuplicateUsername:
 
             print("Username already exists. Try another one.")
-            username = input("Username: ")
+            username = getNonEmptyInput("Username: ")
 
         else:
             successful_signUp = True
 
     return username
+
+def getCategoryInput(prompt = "Enter a book category: ") -> BookCategory:
+    category = None
+    while True:
+        try:
+            BookCategory.printCategories()
+            userInput = input(prompt)
+            category = BookCategory.getCategory(userInput)
+        except ValueError:
+            print("Invalid Category Name")
+        else:
+            break
+
+    return category
+
+def getNonEmptyInput(prompt = ""):
+
+    userInput = input(prompt)
+
+    while (userInput is None) or (len(userInput) == 0) or userInput.isspace():
+        print("You should enter a non empty string.")
+        userInput = input(prompt)
+
+    return userInput
