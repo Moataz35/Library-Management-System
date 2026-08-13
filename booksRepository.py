@@ -49,7 +49,7 @@ class BooksRepository:
 
         dictList = []
         for book in self.booksList:
-            newDict = book.toDict()
+            newDict = book.asDict()
             dictList.append(newDict)
 
         with open(self.fileName, "w") as f:

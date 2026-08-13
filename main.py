@@ -60,6 +60,15 @@ else:
 
     if customerChoice == 1:
 
+        availableBooks = myLibrary.getAvailableBooks()
+
+        print("Available Books:")
+        print('-' * 50)
+        for book in availableBooks:
+            print(book)
+            print('-' * 50)
+
+        print("Enter the title of the book you want to borrow.")
         bookTitle = getNonEmptyInput("Book Title: ")
 
         try:

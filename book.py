@@ -23,7 +23,7 @@ class Book:
 
         return Book(bookTitle, bookAuthor, category)
 
-    def toDict(self):
+    def asDict(self):
         asDict = {
             "Title": self.title,
             "Author": self.author,

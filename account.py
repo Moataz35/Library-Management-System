@@ -9,6 +9,7 @@ class Account:
         self.password = password
         self.role = "Customer"
         self.logged = False
+        self.borrowedBooks = []
 
     def asDict(self):
         newDict = {
@@ -18,7 +19,8 @@ class Account:
                 "National ID": self.nationalID,
                 "Password": self.password,
                 "Role": self.role,
-                "Logged": self.logged
+                "Logged": self.logged,
+                "Borrowed Books": self.borrowedBooks
             }
         }
         return newDict

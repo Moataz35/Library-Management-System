@@ -72,6 +72,10 @@ class AccountManager:
 
         return userData["Logged"] == True
 
+    def updateAccountDetails(self, username, newDetails):
+        
+        self.accounts.update({username:newDetails})
+
     def getStoredAccounts(self):
     
         with open(self.fileName) as f:

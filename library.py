@@ -25,6 +25,11 @@ class Library:
 
         book = self.availableBooks.removeBook(bookTitle)
         self.borrowedBooks.addBook(book)
+
+        accountDetails = self.accountManager.accounts[username]
+        accountDetails["Borrowed Books"].append(book.asDict())
+        self.accountManager.updateAccountDetails(username, accountDetails)
+
         return book
 
     def returnBook(self, username, bookTitle):
@@ -32,11 +37,20 @@ class Library:
         if not self.accountManager.isLogged(username):
             raise AccessDenied("This user is not logged in.")
 
-        if self.isBookBorrowed(bookTitle):
+        if not self.isBookBorrowed(bookTitle):
+            raise BookNotFound("This book is not borrowed")
+
+        try:
+            accountDetails = self.accountManager.accounts[username]
+            accountDetails["Borrowed Books"].remove(book.asDict())
+            self.accountManager.updateAccountDetails(username, accountDetails)
+
+        except ValueError:
+            raise BookNotFound("This user didn't borrow that book")
+        
+        else:
             book = self.borrowedBooks.removeBook(bookTitle)
             self.availableBooks.addBook(book)
-        else:
-            raise BookNotFound("This book is not borrowed")
 
     def addBook(self, username, bookTitle, bookAuthor, bookCategory):
 
@@ -74,3 +88,6 @@ class Library:
         self.availableBooks.updateFile()
         self.borrowedBooks.updateFile()
         self.accountManager.updateAccounts()
+
+    def getAvailableBooks(self) -> list:
+        return self.availableBooks.booksList.copy()
